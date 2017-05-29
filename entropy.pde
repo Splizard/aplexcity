@@ -1,9 +1,14 @@
 
 color[] counters = new color[64];
 
-boolean[] buildings = new boolean[64];
+boolean[] selected = new boolean[64];
+
+int[] buildings = new int[64];
 
 color[] types = new color[11];
+
+//The ID of the building we are upgrading.
+int upgrading = -1;
 
 void setup() {
   size(800,600);
@@ -35,32 +40,116 @@ void mousePressed() {
     return;
   }
   
-  //TODO check for pollution.
-  buildings[y*8+x] = true;
+  //We are placing resources.
+   if (step == 2) {
+       if (counters[y*8+x] == color(0,0,0,0)) { //Check that  the space is empty.
+          counters[y*8+x] = types[(int)random(10)];
+          step = 0;
+          return;
+       }
+   }
+  
+  if (step == 0) {
+    if (buildings[y*8+x] > 0) {
+      upgrading = y*8+x;
+      step = 1;         
+      return;
+    }
+  
+    //TODO check for pollution.
+    buildings[y*8+x] = 1;
+    
+    if (turn > 0) {
+       step = 2;
+    } else {
+       turn++; 
+    }
+  }
+  
+  //This is STEP1 upgrading a building.
+  if (step == 1) {
+    
+    //The resources have been selected.
+    if (y*8+x == upgrading) {
+      int resourcecount = 0;
+      for (int i =0; i < selected.length; i++) {
+         
+        //TODO check that the resources are adjacent.
+        if (selected[i]) { 
+          resourcecount++;
+        }
+      }
+      
+      if (resourcecount == buildings[upgrading]) {
+           for (int i =0; i < selected.length; i++) {
+              if (selected[i]) { 
+                counters[i] = color(0,0,0,0);
+              }
+           }
+           
+           buildings[upgrading]++;
+           step = 2;
+      } else {
+         step = 0; 
+      }
+      
+      //Clear the selection.
+      selected = new boolean[64];
+    } else {
+       selected[y*8+x] = !selected[y*8+x]; 
+    }
+  }
 }
 
 int textsize = 24;
 
+int step = 0;
+int turn = 0;
+
 void draw() {
+   clear();
    for (int i=0; i<64; i++) {
+     if (selected[i]) {
+       stroke(255, 0, 0);
+     } else {
+       stroke(0, 0, 0);
+     }
      fill(255, 255, 255);
      rect(i%8*50,i/8*50,50,50);
-     fill(counters[i]);
-     ellipse(i%8*50+25, i/8*50+25, 50, 50);
+     
+     if (counters[i] != color(0,0,0,0)) {
+       fill(counters[i]);
+       ellipse(i%8*50+25, i/8*50+25, 50, 50);
+     }
    }
    
    for (int i=0; i<64; i++) {
-    if (buildings[i]) {
+    if (buildings[i] > 0) {
          fill(color(100, 100, 100));
          ellipse(i%8*50+50, i/8*50+50, 100, 100);
          fill(color(0,0,0));
          textSize(textsize);
-         text("1", i%8*50+50-textsize/4, i/8*50+50+textsize/4);
+         text(String.valueOf(buildings[i]), i%8*50+50-textsize/4, i/8*50+50+textsize/4);
      }
+   }
+   
+   
+   String text = "";
+   
+   switch (step) {
+      case 0:
+        text = "Place/upgrade your buildings!";
+        break;
+      case 1:
+        text = "Select resources to upgrade!";
+        break;
+      case 2:
+        text = "Place your resource.";
+        break;
    }
    
    //Message.
    textSize(42);
-   fill(color(0,0,0));
-   text("Place your building!", 0, 9*50);
+   fill(color(255,255,255));
+   text(text, 0, 9*50);
 }
