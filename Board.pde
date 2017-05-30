@@ -27,6 +27,9 @@ class Board {
    }
    
    int GetBuilding(int x, int y) {
+       if (x < 0 || y < 0 || x > 7 || y > 7) {
+          return 0; 
+       }
        if (buildings[y*size+x] > 0) {
         return buildings[y*size+x];
        }
@@ -53,6 +56,10 @@ class Board {
           || (i%size == x-1 && i/size == y+1 ) //Top Right.
           || (i%size == x && i/size == y-2 ) //Bottom left.
           || (i%size == x-1 && i/size == y-2 ))) return; //Bottom right.
+          
+       if (counters[y*size+x] == red || counters[y*size+x] == black) {
+          return; 
+       }
       
        selected[y*size+x] = !selected[y*size+x];
    }
@@ -70,6 +77,10 @@ class Board {
    }
    
    boolean CanPlaceBuilding(int x, int y) {
+    if ( x > 7|| y > 7 ) {
+       return false; 
+    }
+     
     if (counters[y*8+x] == black || counters[y*8+x] == brown || counters[y*8+x] == red) return false;
     if (counters[y*8+x+1] == black || counters[y*8+x+1] == brown || counters[y*8+x+1] == red) return false;
     if (counters[(y+1)*8+x] == black || counters[(y+1)*8+x] == brown  || counters[(y+1)*8+x] == red) return false;

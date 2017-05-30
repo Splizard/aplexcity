@@ -9,10 +9,14 @@ class Game {
   GameState state;
   int turn;
   
+  int[] players;
+  int activeplayer;
+  
   
   Game() {
     board = new Board(8);
     state = GameState.Building;
+    players = new int[2];
   }
   
   void mousePressed(int x, int y) {
@@ -21,6 +25,12 @@ class Game {
        if (board.GetCounter(x, y) == empty) { //Check that  the space is empty.
           board.SetCounter(x, y, types[(int)random(10)]); 
           state = GameState.Building;
+          
+           turn++;
+          activeplayer++;
+          if (activeplayer == players.length) {
+             activeplayer = 0; 
+          }
        }
        return;
       
@@ -34,10 +44,14 @@ class Game {
        if (board.CanPlaceBuilding(x, y)) {
          board.PlaceBuilding(x, y);
          
-         if (turn > 0) {
+         if (turn > 1) {
              state = GameState.Placing;
           } else {
-             turn++; 
+             turn++;
+             activeplayer++;
+            if (activeplayer == players.length) {
+               activeplayer = 0; 
+            }
           }
        }
        
@@ -58,6 +72,8 @@ class Game {
            return;
         }
         
+        players[activeplayer] += resourcecount;
+        
         board.AbsorbResources();
         board.ClearSelection();
         board.SetActiveBuilding(-1, -1);
@@ -73,17 +89,17 @@ class Game {
   void draw() {
      board.draw();
      
-     String text = "";
+     String text = "Player "+String.valueOf(activeplayer+1)+": ";
    
    switch (state) {
       case Building:
-        text = "Place/upgrade your buildings!";
+        text += "Place/upgrade your buildings!";
         break;
       case Upgrading:
-        text = "Select resources to upgrade!";
+        text += "Select resources to upgrade!";
         break;
       case Placing:
-        text = "Place your resource.";
+        text += "Place your resource.";
         break;
    }
    
@@ -91,5 +107,9 @@ class Game {
    textSize(42);
    fill(color(255,255,255));
    text(text, 0, 9*50);
+   
+   text("Points:", 0, 10*50);
+   text("Player 1: "+String.valueOf(players[0]), 0, 11*50);
+    text("Player 2: "+String.valueOf(players[1]), 0, 12*50);
   }
 }
