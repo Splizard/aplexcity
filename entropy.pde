@@ -30,6 +30,10 @@ void setup() {
   }
 }
 
+public boolean checkCollision (int a, int b) {
+    return a%8 < b%8 + 2 && a%8 + 2 > b%8 && a/8 < b/8 + 2 && a/8 + 2 > b/8;
+}
+
 void mousePressed() {
   //Determine board coordinates.
   int x = (int)(mouseX/50.0);
@@ -56,7 +60,16 @@ void mousePressed() {
       return;
     }
   
-    //TODO check for pollution.
+    for (int i = 0; i < buildings.length; i++) {
+       if (buildings[i] > 0) {
+         if (checkCollision(y*8+x, i)) {
+            return; 
+         }
+       }
+    }
+    if (x == 7 || y == 7) {
+      return;
+    } 
     buildings[y*8+x] = 1;
     
     if (turn > 0) {
