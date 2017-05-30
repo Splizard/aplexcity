@@ -53,6 +53,7 @@ void mousePressed() {
        }
    }
   
+  //We are building a building.
   if (step == 0) {
     if (buildings[y*8+x] > 0) {
       upgrading = y*8+x;
@@ -70,6 +71,11 @@ void mousePressed() {
     if (x == 7 || y == 7) {
       return;
     } 
+    if (counters[y*8+x] == types[9] || counters[y*8+x] == types[0] || counters[y*8+x] == types[2]) return;
+    if (counters[y*8+x+1] == types[9] || counters[y*8+x+1] == types[0] || counters[y*8+x+1] == types[2]) return;
+    if (counters[(y+1)*8+x] == types[9] || counters[(y+1)*8+x] == types[0]  || counters[(y+1)*8+x] == types[2]) return;
+    if (counters[(y+1)*8+x+1] == types[9] || counters[(y+1)*8+x+1] == types[0] || counters[(y+1)*8+x+1] == types[2]) return;
+    
     buildings[y*8+x] = 1;
     
     if (turn > 0) {
