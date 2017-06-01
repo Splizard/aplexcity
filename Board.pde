@@ -5,6 +5,7 @@ class Board {
    int[] buildings;
    int activebuilding;
    boolean[] selected;
+
    
    Board(int s) {
       size = s; 
@@ -12,11 +13,26 @@ class Board {
       buildings = new int[size*size];
       selected = new boolean[size*size];
       
+      
       //Fill board with random counters.
       for (int i=0; i<size*size; i++) {
         counters[i] = types[(int)random(10)];
       } 
    }
+   
+   //Depending on which color the tokens are, will determine which image is drawn.
+   void drawToken(color token, float tokenX, float tokenY){
+     if(token == black)image(blackToken, tokenX, tokenY);
+     if(token == white)image(whiteToken, tokenX, tokenY);
+     if(token == red)image(redToken, tokenX, tokenY);
+     if(token == green)image(greenToken, tokenX, tokenY);
+     if(token == blue)image(blueToken, tokenX, tokenY);
+     if(token == yellow)image(yellowToken, tokenX, tokenY);
+     if(token == pink)image(pinkToken, tokenX, tokenY);
+     if(token == purple)image(purpleToken, tokenX, tokenY);
+     if(token == orange)image(orangeToken, tokenX, tokenY);
+     if(token == brown)image(brownToken, tokenX, tokenY);
+    }
    
    private boolean checkCollision (int a, int b) {
     return a%size < b%size + 2 && a%size + 2 > b%size && a/size < b/size + 2 && a/size + 2 > b/size;
@@ -162,8 +178,9 @@ class Board {
        rect(i%size*50,i/size*50,50,50);
        
        if (counters[i] != color(0,0,0,0)) {
-         fill(counters[i]);
-         ellipse(i%size*50+25, i/size*50+25, 50, 50);
+         //fill(counters[i]);
+         //ellipse(i%size*50+25, i/size*50+25, 50, 50);
+         drawToken(counters[i], i%size*50, i/size*50);
        }
      }
      
