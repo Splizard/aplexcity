@@ -22,11 +22,11 @@ class Game {
   void mousePressed(int x, int y) {
    switch (state) {
      case Placing:
-       if (board.GetCounter(x, y) == empty) { //Check that  the space is empty.
-          board.SetCounter(x, y, types[(int)random(10)]); 
+       if (board.GetCounter(x, y) == empty && board.GetBuilding(x, y) == 0) { //Check that  the space is empty.
+          board.PlaceCounter(x, y); 
           state = GameState.Building;
           
-           turn++;
+          turn++;
           activeplayer++;
           if (activeplayer == players.length) {
              activeplayer = 0; 
@@ -64,7 +64,6 @@ class Game {
         
         int resourcecount = board.NumberOfSelectedResources();
       
-     
         if (resourcecount != board.ActiveBuilding()) {
            state = GameState.Building;
            board.ClearSelection();
@@ -87,7 +86,7 @@ class Game {
   }
   
   void draw() {
-     board.draw();
+     board.draw(state == GameState.Placing);
      
      String text = "Player "+String.valueOf(activeplayer+1)+": ";
    
