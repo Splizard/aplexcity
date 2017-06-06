@@ -3,6 +3,7 @@ class Board {
    int size;
    color[] counters;
    int[] buildings;
+   boolean[]complete;
    int[][][] internals; //Buildings, levels, counters.
    int activebuilding;
    boolean[] selected;
@@ -14,6 +15,7 @@ class Board {
       size = s; 
       counters = new color[size*size];
       buildings = new int[size*size];
+      complete = new boolean[size*size]; //This array stores whether or not a building is completed.
       internals = new int[size*size][][];
       selected = new boolean[size*size];
       nextcounter = types[(int)random(10)];
@@ -161,14 +163,13 @@ class Board {
           internals[activebuilding][buildings[activebuilding]][id] = counters[i];
           counters[i] = empty;
           id++;
-          if (id==8) {
+          if (id==8) { //<>//
              id = 0; 
-          } //<>//
+          }
         }
      }
            
-     buildings[activebuilding]++; 
-     activebuilding = -1;
+     buildings[activebuilding]++;
    }
    
    void ClearSelection() {
@@ -208,6 +209,15 @@ class Board {
         if (x > 0 && buildings[y*size+(x-1)] > 0) {
          activebuilding = y*size+(x-1);
        }
+       
+       if (complete[activebuilding]) {
+          activebuilding = -1;   
+       }
+   }
+   
+   //This function, completes the active building.
+   void CompleteBuilding() {
+       complete[activebuilding] = true;
    }
    
    void SetCounter(int x, int y, color counter) {
@@ -268,7 +278,11 @@ class Board {
            ellipse(i%size*50+50, i/size*50+50, 100, 100);
            fill(color(0,0,0));
            textSize(textsize);
-           text(String.valueOf(buildings[i]), i%size*50+50-textsize/4, i/size*50+50+textsize/4);
+           if (complete[i]) {
+             text("C", i%size*50+50-textsize/4, i/size*50+50+textsize/4);
+           } else {
+             text(String.valueOf(buildings[i]), i%size*50+50-textsize/4, i/size*50+50+textsize/4);
+           }
        }
      }
     

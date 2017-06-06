@@ -38,6 +38,10 @@ class Game {
        if (board.GetBuilding(x, y) > 0) {
           state = GameState.Consumption;
           board.SetActiveBuilding(x, y);
+          
+          if (board.ActiveBuilding() == 0) {
+             state = GameState.Construction;
+           }
           return;
        }
        
@@ -75,13 +79,25 @@ class Game {
         
         board.AbsorbResources();
         board.ClearSelection();
-        board.SetActiveBuilding(-1, -1);
-        state = GameState.Conception;
-    } else {
+        state = GameState.Completion;
+      } else {
+        
+        board.SelectResource(x, y); 
+        
+      }
+      break;
       
-      board.SelectResource(x, y); 
-      
-    }
+   case Completion:
+     
+     if (board.IsActiveBuilding(x, y)) {
+       board.CompleteBuilding();
+       board.SetActiveBuilding(-1, -1);
+       state = GameState.Conception;
+     } else {
+       state = GameState.Conception;
+       board.SetActiveBuilding(-1, -1);
+     }
+    
    }
   }
   
@@ -99,6 +115,9 @@ class Game {
         break;
       case Conception:
         text += "Place your resource.";
+        break;
+      case Completion:
+        text += "Complete?";
         break;
    }
    
