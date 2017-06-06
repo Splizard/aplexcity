@@ -15,7 +15,7 @@ class Board {
       size = s; 
       counters = new color[size*size];
       buildings = new int[size*size];
-      complete = new boolean[size*size]; //This array stores whether or not a building is completed.
+      complete = new boolean[size*size]; //This array stores whether or not a building of a given index is completed.
       internals = new int[size*size][][];
       selected = new boolean[size*size];
       nextcounter = types[(int)random(10)];
@@ -79,7 +79,7 @@ class Board {
           || (i%size == x && i/size == y-2 ) //Bottom left.
           || (i%size == x-1 && i/size == y-2 ))) return; //Bottom right.
           
-       if (counters[y*size+x] == red || counters[y*size+x] == black || counters[y*size+x] == brown) {
+       if (counters[y*size+x] == black || counters[y*size+x] == brown) {
           return; 
        }
       
@@ -119,11 +119,13 @@ class Board {
    }
    
    int NumberOfSelectedResources() {
-     int blues, greens, yellows, purples;
+     int blues, greens, yellows, purples, reds, oranges;
      blues = 0;
      greens = 0;
      yellows = 0;
      purples = 0;
+     reds = 0;
+     oranges = 0;
      
      int resourcecount = 0;
         for (int i =0; i < selected.length; i++) {
@@ -135,6 +137,8 @@ class Board {
               if (counters[i] == green) greens++;
               if (counters[i] == purple) purples++;
               if (counters[i] == yellow) yellows++;
+              if (counters[i] == red) reds++;
+              if (counters[i] == orange) oranges++;
             }
           }
         }
@@ -146,10 +150,20 @@ class Board {
           resourcecount++;
         }
         
+        while (oranges > 0 && yellows > 0) {
+          oranges--;
+          yellows--;
+          reds++;
+        }
+        
         while (yellows > 0 && purples > 0) {
           yellows--;
           purples--;
           resourcecount++;
+        }
+        
+        if (reds > blues) {
+            resourcecount = -resourcecount;  //<>//
         }
         
      return resourcecount;
@@ -163,7 +177,7 @@ class Board {
           internals[activebuilding][buildings[activebuilding]][id] = counters[i];
           counters[i] = empty;
           id++;
-          if (id==8) { //<>//
+          if (id==8) {
              id = 0; 
           }
         }
