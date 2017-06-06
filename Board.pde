@@ -199,13 +199,13 @@ class Board {
        if (buildings[y*size+x] > 0) {
          activebuilding = y*size+x;
        }
-        if (buildings[(y-1)*size+x] > 0) {
+        if (y > 0 && buildings[(y-1)*size+x] > 0) {
          activebuilding = (y-1)*size+x;
        }
-        if (buildings[(y-1)*size+x-1] > 0) {
+        if (x > 0 && y > 0 && buildings[(y-1)*size+x-1] > 0) {
          activebuilding = (y-1)*size+x-1;
        }
-        if (buildings[y*size+(x-1)] > 0) {
+        if (x > 0 && buildings[y*size+(x-1)] > 0) {
          activebuilding = y*size+(x-1);
        }
    }
