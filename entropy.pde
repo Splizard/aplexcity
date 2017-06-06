@@ -14,8 +14,31 @@ color[] types = {black, white, red, green, blue, yellow, pink, purple, orange, b
 
 Game game = new Game();
 
+   PImage blackToken;
+   PImage whiteToken;
+   PImage redToken;
+   PImage greenToken;
+   PImage blueToken;
+   PImage yellowToken;
+   PImage pinkToken;
+   PImage purpleToken;
+   PImage orangeToken;
+   PImage brownToken;
+
 void setup() {
   size(800,600);
+        
+  blackToken = loadImage("LandPollution.png");
+  whiteToken = loadImage("White.png");
+  redToken = loadImage("Fire.png");
+  greenToken = loadImage("Nature.png");
+  blueToken = loadImage("Water.png");
+  yellowToken = loadImage("Electricity.png");
+  pinkToken = loadImage("People.png");
+  purpleToken = loadImage("Technology.png");
+  orangeToken = loadImage("Explosives.png");
+  brownToken = loadImage("WaterPollution.png");
+  
 }
 
 void mousePressed() {
