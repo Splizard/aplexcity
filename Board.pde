@@ -163,7 +163,7 @@ class Board {
           id++;
           if (id==8) {
              id = 0; 
-          }
+          } //<>//
         }
      }
            
@@ -241,8 +241,9 @@ class Board {
        int x = mouseX/50;
        int y = mouseY/50;
        
-       fill(nextcounter);
-       ellipse(x*50+25, y*50+25, 50, 50);
+       //fill(nextcounter);
+       //ellipse(x*50+25, y*50+25, 50, 50);
+       drawToken(nextcounter, x*50, y*50);
      }
      
      for (int i=0; i<64; i++) {
@@ -253,8 +254,9 @@ class Board {
              for (int x = 0; x < internals[i].length; x++){
                if (internals[i][x] != null) {
                  for (int j = 0; j < internals[i][x].length; j++){
-                   fill(internals[i][x][j]);  
-                   ellipse((size+1+x)*50, j*50+50, 50, 50);
+                   //fill(internals[i][x][j]);  
+                   //ellipse((size+1+x)*50, j*50+50, 50, 50);
+                   drawToken(internals[i][x][j], (size+1+x)*50, j*50+50);
                  }
                }
              }
