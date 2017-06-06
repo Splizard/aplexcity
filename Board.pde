@@ -56,7 +56,7 @@ class Board {
         if (y > 0 && buildings[(y-1)*size+x] > 0) {
         return buildings[(y-1)*size+x];
        }
-        if (y > 0 && x < size && buildings[(y-1)*size+x-1] > 0) {
+        if (x > 0 && y > 0 && x < size && buildings[(y-1)*size+x-1] > 0) {
           return buildings[(y-1)*size+x-1];
        }
         if (y > 0 && x < size && buildings[y*size+(x-1)] > 0) {
