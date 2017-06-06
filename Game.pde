@@ -1,5 +1,5 @@
 public enum GameState {
-   Building, Upgrading, Placing
+   Construction, Consumption, Completion, Conception, Combustion
 }
 
 int textsize = 24;
@@ -15,16 +15,16 @@ class Game {
   
   Game() {
     board = new Board(8);
-    state = GameState.Building;
+    state = GameState.Construction;
     players = new int[2];
   }
   
   void mousePressed(int x, int y) {
    switch (state) {
-     case Placing:
+     case Conception:
        if (board.GetCounter(x, y) == empty && board.GetBuilding(x, y) == 0) { //Check that  the space is empty.
           board.PlaceCounter(x, y); 
-          state = GameState.Building;
+          state = GameState.Construction;
           
           turn++;
           activeplayer++;
@@ -34,9 +34,9 @@ class Game {
        }
        return;
       
-     case Building:
+     case Construction:
        if (board.GetBuilding(x, y) > 0) {
-          state = GameState.Upgrading;
+          state = GameState.Consumption;
           board.SetActiveBuilding(x, y);
           return;
        }
@@ -45,7 +45,7 @@ class Game {
          board.PlaceBuilding(x, y);
          
          if (turn > 1) {
-             state = GameState.Placing;
+             state = GameState.Conception;
           } else {
              turn++;
              activeplayer++;
@@ -57,7 +57,7 @@ class Game {
        
      return;
      
-     case Upgrading:
+     case Consumption:
     
       //The resources have been selected.
       if (board.IsActiveBuilding(x, y)) {
@@ -65,7 +65,7 @@ class Game {
         int resourcecount = board.NumberOfSelectedResources();
       
         if (resourcecount != board.ActiveBuilding()) {
-           state = GameState.Building;
+           state = GameState.Construction;
            board.ClearSelection();
            board.SetActiveBuilding(-1, -1);
            return;
@@ -76,7 +76,7 @@ class Game {
         board.AbsorbResources();
         board.ClearSelection();
         board.SetActiveBuilding(-1, -1);
-        state = GameState.Placing;
+        state = GameState.Conception;
     } else {
       
       board.SelectResource(x, y); 
@@ -86,18 +86,18 @@ class Game {
   }
   
   void draw() {
-     board.draw(state == GameState.Placing);
+     board.draw(state == GameState.Conception);
      
      String text = "Player "+String.valueOf(activeplayer+1)+": ";
    
    switch (state) {
-      case Building:
+      case Construction:
         text += "Place/upgrade your buildings!";
         break;
-      case Upgrading:
+      case Consumption:
         text += "Select resources to upgrade!";
         break;
-      case Placing:
+      case Conception:
         text += "Place your resource.";
         break;
    }
