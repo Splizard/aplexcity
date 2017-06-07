@@ -39,6 +39,30 @@ class Board {
      if(token == orange)image(orangeToken, tokenX, tokenY);
      if(token == brown)image(brownToken, tokenX, tokenY);
     }
+    
+    //Returns the number of buildings on the board which are completed.
+    int CompletedBuildings() {
+       int number = 0;
+       for (int i = 0; i < complete.length; i++) {
+           if (complete[i]) {
+             number++;
+           }
+       }
+       return number;
+    }
+    
+    //Returns whether or not the board is full.
+    boolean Full() {
+        for (int x = 0; x <= 7; x++) {
+        for (int y = 0; y <= 7; y++) {
+          if (GetCounter(x, y) == empty && GetBuilding(x, y) == 0) {
+              println("Free spot at ", x, y);
+              return false;
+          }
+        }
+        }
+        return true;
+    }
    
    private boolean checkCollision (int a, int b) {
     return a%size < b%size + 2 && a%size + 2 > b%size && a/size < b/size + 2 && a/size + 2 > b/size;
@@ -61,7 +85,7 @@ class Board {
         if (x > 0 && y > 0 && x < size && buildings[(y-1)*size+x-1] > 0) {
           return buildings[(y-1)*size+x-1];
        }
-        if (y > 0 && x < size && buildings[y*size+(x-1)] > 0) {
+        if (x < size && buildings[y*size+(x-1)] > 0) {
           return buildings[y*size+(x-1)];
        }
       return 0;
@@ -103,10 +127,34 @@ class Board {
        return false; 
     }
      
-    if (counters[y*8+x] == black || counters[y*8+x] == brown || counters[y*8+x] == red) return false;
-    if (counters[y*8+x+1] == black || counters[y*8+x+1] == brown || counters[y*8+x+1] == red) return false;
-    if (counters[(y+1)*8+x] == black || counters[(y+1)*8+x] == brown  || counters[(y+1)*8+x] == red) return false;
-    if (counters[(y+1)*8+x+1] == black || counters[(y+1)*8+x+1] == brown || counters[(y+1)*8+x+1] == red) return false; 
+    if (counters[y*8+x] == black || counters[y*8+x] == brown) return false;
+    if (counters[y*8+x+1] == black || counters[y*8+x+1] == brown) return false;
+    if (counters[(y+1)*8+x] == black || counters[(y+1)*8+x] == brown) return false;
+    if (counters[(y+1)*8+x+1] == black || counters[(y+1)*8+x+1] == brown) return false; 
+    
+    int reds, oranges, yellows, blues;
+      reds = 0;
+      oranges = 0;
+      yellows = 0;
+      blues = 0;
+      
+      for (int i = 0; i <= 1; i++) {
+        for (int j = 0; j <= 1; j++) {
+          int counter = GetCounter(x+i, y+j);
+          
+          if (counter == red) reds ++;
+          if (counter == orange) oranges ++;
+          if (counter == yellow) yellows ++;
+          if (counter == blue) blues ++;
+          
+        }
+      }
+      
+      while (oranges > 0 && yellows > 0) {
+          oranges--;
+          yellows--;
+          reds++;
+      }
      
      for (int i = 0; i < buildings.length; i++) {
          if (buildings[i] > 0) {
@@ -115,6 +163,10 @@ class Board {
            }
          }
       }
+       if (reds > blues) {
+        println(reds, blues);
+        return false; 
+       }
       return true;
    }
    
@@ -184,6 +236,31 @@ class Board {
         }
       }
     
+     return number;
+   }
+   
+   int BurnResources() {
+     for (int i =0; i < selected.length; i++) {
+        if (selected[i]) { 
+          counters[i] = empty;
+        }
+     }
+     
+     //Count the amount of resources already in the building.
+      int i = activebuilding;
+      int number = 0;
+     for (int x = 0; x < internals[i].length; x++){
+       if (internals[i][x] != null) {
+         for (int j = 0; j < internals[i][x].length; j++){
+           if (internals[i][x][j] != empty) {
+              number++; 
+           }
+         }
+       }
+     }
+           
+     buildings[activebuilding]--;
+     internals[activebuilding][buildings[activebuilding]] = null;
      return number;
    }
    

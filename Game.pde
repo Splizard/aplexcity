@@ -1,5 +1,5 @@
 public enum GameState {
-   Construction, Consumption, Completion, Conception, Combustion
+   Construction, Consumption, Completion, Conception, Combustion, Win, Lose
 }
 
 int textsize = 24;
@@ -10,6 +10,7 @@ class Game {
   int turn;
   
   int[] players;
+  boolean[] removed;
   int activeplayer;
   
   
@@ -17,9 +18,34 @@ class Game {
     board = new Board(8);
     state = GameState.Construction;
     players = new int[2];
+    removed = new boolean[players.length];
+  }
+  
+  void IncrementTurn() {
+    
+    
+    
+    turn++;
+    activeplayer++;
+    if (activeplayer == players.length) {
+       activeplayer = 0; 
+    }
+    
+     int lastplayer = activeplayer;
+    while (removed[activeplayer]) {
+        activeplayer++;
+        if (activeplayer == players.length) {
+           activeplayer = 0; 
+        }
+        if (activeplayer == lastplayer) {
+           state = GameState.Lose;
+           return;
+        }
+    } 
   }
   
   void mousePressed(int x, int y) {
+    
    switch (state) {
      case Conception:
        if (board.GetCounter(x, y) == empty && board.GetBuilding(x, y) == 0) { //Check that  the space is empty.
@@ -29,6 +55,19 @@ class Game {
        return;
       
      case Construction:
+       if (x >= 7 || y >= 7) {
+        state = GameState.Conception;
+        
+        if (board.Full()) {
+          removed[activeplayer] = true;
+          state = GameState.Construction;
+          IncrementTurn();
+          return;
+        } 
+        
+        return; 
+      }
+     
        if (board.GetBuilding(x, y) > 0) {
           state = GameState.Consumption;
           board.SetActiveBuilding(x, y);
@@ -44,23 +83,47 @@ class Game {
          
          if (turn > 1) {
              state = GameState.Conception;
+             
+       
+            if (board.Full()) {
+              removed[activeplayer] = true;
+              state = GameState.Construction;
+              IncrementTurn();
+              return;
+            }  
+             
           } else {
-             turn++;
-             activeplayer++;
-            if (activeplayer == players.length) {
-               activeplayer = 0; 
-            }
+             state = GameState.Combustion;
           }
        }
        
      return;
      
      case Consumption:
+       if (x < 0 || x > 7 || y < 0 || y > 7) {
+          state = GameState.Construction; 
+       }
     
       //The resources have been selected.
       if (board.IsActiveBuilding(x, y)) {
         
         int resourcecount = board.NumberOfSelectedResources();
+        
+        if (resourcecount < 0) {
+            if (-resourcecount != board.ActiveBuilding()) {
+               state = GameState.Construction;
+               board.ClearSelection();
+               board.SetActiveBuilding(-1, -1);
+               return;
+            }
+        
+            players[activeplayer] += resourcecount;
+            players[activeplayer] -= board.BurnResources();
+            board.ClearSelection();
+            state = GameState.Completion;
+        
+            return;
+        }
       
         if (resourcecount != board.ActiveBuilding()) {
            state = GameState.Construction;
@@ -85,11 +148,31 @@ class Game {
      
      if (board.IsActiveBuilding(x, y)) {
        board.CompleteBuilding();
+       
+       if (board.ActiveBuilding() >= 6) {
+           state = GameState.Win;
+           return;
+       }
+       
        board.SetActiveBuilding(-1, -1);
        state = GameState.Conception;
      } else {
        state = GameState.Conception;
        board.SetActiveBuilding(-1, -1);
+     }
+     
+     //When there are 6 buildings on the board, the game is over.
+     if (board.CompletedBuildings() >= 6) {
+         state = GameState.Win;
+     }
+     
+     if (state == GameState.Conception) {
+        if (board.Full()) {
+            removed[activeplayer] = true;
+            state = GameState.Construction;
+            IncrementTurn();
+            return;
+        }
      }
      
      break;
@@ -98,11 +181,7 @@ class Game {
     
       if (x >= 7 || y >= 7) {
         state = GameState.Construction;
-        turn++;
-        activeplayer++;
-        if (activeplayer == players.length) {
-           activeplayer = 0; 
-        }
+        IncrementTurn();
         return; 
       }
       
@@ -119,7 +198,7 @@ class Game {
           if (counter == red) reds ++;
           if (counter == orange) oranges ++;
           if (counter == yellow) yellows ++;
-          if (counter == blues) blues ++;
+          if (counter == blue) blues ++;
           
         }
       }
@@ -135,11 +214,7 @@ class Game {
          
          state = GameState.Construction;
       
-        turn++;
-        activeplayer++;
-        if (activeplayer == players.length) {
-           activeplayer = 0; 
-        }
+        IncrementTurn();
       }
    }
   }
@@ -164,6 +239,26 @@ class Game {
         break;
       case Combustion:
         text += "Combustion Stage";
+        break;
+      case Win:
+        if (players[0] > players[1]) {
+          text += "Player 1 Won!";
+        } else if (players[0] < players[1]) {
+          text += "Player 2 Won!";
+        } else {
+          text += "Tie!";
+        }
+        break;
+      case Lose:
+        if (players[0] > players[1]) {
+          text += "Player 2 Won!";
+        } else if (players[0] < players[1]) {
+          text += "Player 1 Won!";
+        } else {
+          text += "Tie!";
+        }
+        break;
+      
    }
    
    //Message.
