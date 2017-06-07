@@ -169,6 +169,24 @@ class Board {
      return resourcecount;
    }
    
+   int Combust(int x, int y) {
+     int number = 0;
+     
+     for (int i = 0; i <= 1; i++) {
+        for (int j = 0; j <= 1; j++) {
+          int counter = GetCounter(x+i, y+j);
+          
+          if (counter != black && counter != brown) {
+              number++;
+              SetCounter(x+i, y+j, empty);
+          }
+          
+        }
+      }
+    
+     return number;
+   }
+   
    void AbsorbResources() {
      int id = 0;
      internals[activebuilding][buildings[activebuilding]] = new int[8];

@@ -24,13 +24,7 @@ class Game {
      case Conception:
        if (board.GetCounter(x, y) == empty && board.GetBuilding(x, y) == 0) { //Check that  the space is empty.
           board.PlaceCounter(x, y); 
-          state = GameState.Construction;
-          
-          turn++;
-          activeplayer++;
-          if (activeplayer == players.length) {
-             activeplayer = 0; 
-          }
+          state = GameState.Combustion;
        }
        return;
       
@@ -97,7 +91,56 @@ class Game {
        state = GameState.Conception;
        board.SetActiveBuilding(-1, -1);
      }
+     
+     break;
     
+    case Combustion:
+    
+      if (x >= 7 || y >= 7) {
+        state = GameState.Construction;
+        turn++;
+        activeplayer++;
+        if (activeplayer == players.length) {
+           activeplayer = 0; 
+        }
+        return; 
+      }
+      
+      int reds, oranges, yellows, blues;
+      reds = 0;
+      oranges = 0;
+      yellows = 0;
+      blues = 0;
+      
+      for (int i = 0; i <= 1; i++) {
+        for (int j = 0; j <= 1; j++) {
+          int counter = board.GetCounter(x+i, y+j);
+          
+          if (counter == red) reds ++;
+          if (counter == orange) oranges ++;
+          if (counter == yellow) yellows ++;
+          if (counter == blues) blues ++;
+          
+        }
+      }
+      
+      while (oranges > 0 && yellows > 0) {
+          oranges--;
+          yellows--;
+          reds++;
+      }
+      
+      if (reds > blues) {
+         players[activeplayer] -= board.Combust(x, y);
+         
+         state = GameState.Construction;
+      
+        turn++;
+        activeplayer++;
+        if (activeplayer == players.length) {
+           activeplayer = 0; 
+        }
+      }
    }
   }
   
@@ -108,17 +151,19 @@ class Game {
    
    switch (state) {
       case Construction:
-        text += "Place/upgrade your buildings!";
+        text += "Construction Stage";
         break;
       case Consumption:
-        text += "Select resources to upgrade!";
+        text += "Consumption Stage";
         break;
       case Conception:
-        text += "Place your resource.";
+        text += "Conception Stage";
         break;
       case Completion:
-        text += "Complete?";
+        text += "Completion Stage";
         break;
+      case Combustion:
+        text += "Combustion Stage";
    }
    
    //Message.
