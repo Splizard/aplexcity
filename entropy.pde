@@ -43,26 +43,39 @@ void setup() {
 }
 
 void mousePressed() {
-  if (mouseX > width-150 && mouseY < 42) {
+  if (mouseX > width-150 && mouseY <  52) {
      game = new Game(); 
      return;
   }
   
-  if (mouseX < 100) return;
-  if (mouseY < 50) return;
-  
+    
   //Determine board coordinates.
   int x = (int)((mouseX/1.5 - 100)/50.0);
   int y = (int)((mouseY/1.5 - 50)/50.0);
   
+  if (mouseX > 800 && mouseY < 52 && mouseX < 900) {
+     try {
+      game.mousePressed(x, y);
+    } catch (Exception e) {
+     println("error!");
+    }
+  }
+  
+  if (mouseX < 100) return;
+  if (mouseY < 50) return;
+
+  
   //Outside of the board.
-  if (x > 8 || y > 8) {
+  if (x > 7 || y > 7 || x < 0 || y < 0) {
     return;
   }
   
   
-  
-  game.mousePressed(x, y);
+  try {
+    game.mousePressed(x, y);
+  } catch (Exception e) {
+     println("error!");
+  }
 }
 
 void draw() {
@@ -75,5 +88,7 @@ void draw() {
    
    textSize(42);
    fill(color(255,255,255));
-    text("Restart", width-150, 42);
+    text("Restart", width-150, 52);
+    
+    text("Skip", 800, 52);
 }
