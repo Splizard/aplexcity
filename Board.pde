@@ -85,7 +85,7 @@ class Board {
         if (x > 0 && y > 0 && x < size && buildings[(y-1)*size+x-1] > 0) {
           return buildings[(y-1)*size+x-1];
        }
-        if (x < size && buildings[y*size+(x-1)] > 0) {
+        if (x > 0 && x < size && buildings[y*size+(x-1)] > 0) {
           return buildings[y*size+(x-1)];
        }
       return 0;
@@ -357,8 +357,8 @@ class Board {
      
      if (placing) {
          
-       int x = mouseX/50;
-       int y = mouseY/50;
+       int x = (int)(mouseX/1.5 - 100d)/50;
+       int y = (int)(mouseY/1.5 - 50)/50;
        
        //fill(nextcounter);
        //ellipse(x*50+25, y*50+25, 50, 50);

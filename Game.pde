@@ -55,7 +55,7 @@ class Game {
        return;
       
      case Construction:
-       if (x >= 7 || y >= 7) {
+       if (x > 7 || y > 7) {
         state = GameState.Conception;
         
         if (board.Full()) {
@@ -222,52 +222,57 @@ class Game {
   void draw() {
      board.draw(state == GameState.Conception);
      
-     String text = "Player "+String.valueOf(activeplayer+1)+": ";
+     String text = "Player "+String.valueOf(activeplayer+1)+"'s turn";
+     String title = "";
    
    switch (state) {
       case Construction:
-        text += "Construction Stage";
+        title = "Construction Stage";
         break;
       case Consumption:
-        text += "Consumption Stage";
+        title = "Consumption Stage";
         break;
       case Conception:
-        text += "Conception Stage";
+        title = "Conception Stage";
         break;
       case Completion:
-        text += "Completion Stage";
+        title = "Completion Stage";
         break;
       case Combustion:
-        text += "Combustion Stage";
+        title = "Combustion Stage";
         break;
       case Win:
         if (players[0] > players[1]) {
-          text += "Player 1 Won!";
+          text = "Player 1 Won!";
         } else if (players[0] < players[1]) {
-          text += "Player 2 Won!";
+          text = "Player 2 Won!";
         } else {
-          text += "Tie!";
+          text = "Tie!";
         }
         break;
       case Lose:
         if (players[0] > players[1]) {
-          text += "Player 2 Won!";
+          text = "Player 2 Won!";
         } else if (players[0] < players[1]) {
-          text += "Player 1 Won!";
+          text = "Player 1 Won!";
         } else {
-          text += "Tie!";
+          text = "Tie!";
         }
         break;
       
    }
    
+   
+   
    //Message.
    textSize(42);
    fill(color(255,255,255));
+   
+   text(title, 0, -12);
    text(text, 0, 9*50);
    
-   text("Points:", 0, 10*50);
-   text("Player 1: "+String.valueOf(players[0]), 0, 11*50);
-    text("Player 2: "+String.valueOf(players[1]), 0, 12*50);
+   //text("Points:", 0, 10*50);
+   text("Player 1 has "+String.valueOf(players[0])+" points", 0, 11*50);
+    text("Player 2 has "+String.valueOf(players[1])+" points", 0, 12*50);
   }
 }

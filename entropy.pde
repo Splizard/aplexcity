@@ -26,7 +26,8 @@ Game game = new Game();
    PImage brownToken;
 
 void setup() {
-  size(800,600);
+  //size(800,600);
+  fullScreen();
         
   blackToken = loadImage("LandPollution.png");
   whiteToken = loadImage("White.png");
@@ -42,19 +43,37 @@ void setup() {
 }
 
 void mousePressed() {
+  if (mouseX > width-150 && mouseY < 42) {
+     game = new Game(); 
+     return;
+  }
+  
+  if (mouseX < 100) return;
+  if (mouseY < 50) return;
+  
   //Determine board coordinates.
-  int x = (int)(mouseX/50.0);
-  int y = (int)(mouseY/50.0);
+  int x = (int)((mouseX/1.5 - 100)/50.0);
+  int y = (int)((mouseY/1.5 - 50)/50.0);
   
   //Outside of the board.
   if (x > 8 || y > 8) {
     return;
   }
   
+  
+  
   game.mousePressed(x, y);
 }
 
 void draw() {
    clear();
+   pushMatrix();
+   scale(1.5);
+   translate(100, 50);
    game.draw();
+   popMatrix();
+   
+   textSize(42);
+   fill(color(255,255,255));
+    text("Restart", width-150, 42);
 }
