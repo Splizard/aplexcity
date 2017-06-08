@@ -230,28 +230,23 @@ class Game {
    switch (state) {
       case Construction:
         title = "Construction Stage";
-        rulesLn1 = "Place a building on a 2x2 Square";
-        rulesLn2 = "You cannot place on fire or pollution";
+        rulesLn1 = "Place a building by clicking on the top left\non a 2x2 Square. You cannot place\non fire or pollution.\nClick on a building to upgrade it.";
         break;
       case Consumption:
         title = "Consumption Stage";
-        rulesLn1 = "Upgrade your building. Collect";
-        rulesLn2 = "resources adjacent to your building";
+        rulesLn1 = "Click on resources around your building, \nyou need to select as many resources \nas the number displayed on the building. Click on the building again to consume them.";
         break;
       case Conception:
         title = "Conception Stage";
-        rulesLn1 = "Place resource. Least points wins if";
-        rulesLn2 = "no spaces available to place resource";
+        rulesLn1 = "Click to the right of the board to see \nthe resource you need to place. Place this \nin an empty space. If there are \nno empty spaces, you are out of the game.";
         break;
       case Completion:
         title = "Completion Stage";
-        rulesLn1 = "Complete building. Most points wins";
-        rulesLn2 = "  once six buildings are complete";
+        rulesLn1 = "Click on a building in order to complete it, \nonce a building is completed, it can no \nlonger consume resources. You need six \ncompleted buildings to end the game.";
         break;
       case Combustion:
         title = "Combustion Stage";
-        rulesLn1 = "Burn resources in a 2x2 Square.";
-        rulesLn2 = "  It must include at least one fire.";
+        rulesLn1 = "Click on the top left of a 2x2 square with \n'fire' or 'electricty and explosives'. \nIf there is no water, the resources will be \nremoved and you will lose some points.";
         break;
       case Win:
         if (players[0] > players[1]) {
@@ -282,10 +277,13 @@ class Game {
    
    text(title, 0, -12);
    text(text, 0, 9*50);
-   text(rulesLn1, 460,450);
-   text(rulesLn2, 430,500);
    
+   textSize(24);
+   text("Help:", 500, 450);
+   text(rulesLn1, 500,500);
+   text(rulesLn2, 500,525);
    
+   textSize(42);
    //text("Points:", 0, 10*50);
    text("Player 1 has "+String.valueOf(players[0])+" points", 0, 11*50);
     text("Player 2 has "+String.valueOf(players[1])+" points", 0, 12*50);
