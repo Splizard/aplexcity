@@ -277,11 +277,6 @@ class Game {
    
    text(title, 0, -12);
    text(text, 0, 9*50);
-<<<<<<< HEAD
-   text(rulesLn1, 430,450);
-   text(rulesLn2, 400,500);
-=======
->>>>>>> 0012a060ca8e83c2b091bb4621efe3d353b5681f
    
    textSize(24);
    text("Help:", 500, 450);
