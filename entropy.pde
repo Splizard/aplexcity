@@ -43,6 +43,7 @@ void setup() {
 }
 
 void mousePressed() {
+     loop();
   if (mouseX > width-150 && mouseY <  52) {
      game = new Game(); 
      return;
@@ -53,7 +54,7 @@ void mousePressed() {
   int x = (int)((mouseX/1.5 - 100)/50.0);
   int y = (int)((mouseY/1.5 - 50)/50.0);
   
-  if (mouseX > 800 && mouseY < 52 && mouseX < 900) {
+  if (mouseX > 800 && mouseY < 52 && mouseX < 1000) {
      try {
       game.mousePressed(x, y);
     } catch (Exception e) {
@@ -90,5 +91,5 @@ void draw() {
    fill(color(255,255,255));
     text("Restart", width-150, 52);
     
-    text("Skip", 800, 52);
+    text("Skip stage", 800, 52);
 }

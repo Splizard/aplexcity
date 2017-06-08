@@ -363,6 +363,8 @@ class Board {
        //fill(nextcounter);
        //ellipse(x*50+25, y*50+25, 50, 50);
        drawToken(nextcounter, x*50, y*50);
+     } else {
+        noLoop(); 
      }
      
      for (int i=0; i<64; i++) {
