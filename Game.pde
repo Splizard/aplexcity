@@ -224,22 +224,34 @@ class Game {
      
      String text = "Player "+String.valueOf(activeplayer+1)+"'s turn";
      String title = "";
+     String rulesLn1 = "";
+     String rulesLn2 = "";
    
    switch (state) {
       case Construction:
         title = "Construction Stage";
+        rulesLn1 = "Place a building on a 2x2 Square";
+        rulesLn2 = "You cannot place on fire or pollution";
         break;
       case Consumption:
         title = "Consumption Stage";
+        rulesLn1 = "Upgrade your building. Collect";
+        rulesLn2 = "resources adjacent to your building";
         break;
       case Conception:
         title = "Conception Stage";
+        rulesLn1 = "Place resource. Least points wins if";
+        rulesLn2 = "no spaces available to place resource";
         break;
       case Completion:
         title = "Completion Stage";
+        rulesLn1 = "Complete building. Most points wins";
+        rulesLn2 = "  once six buildings are complete";
         break;
       case Combustion:
         title = "Combustion Stage";
+        rulesLn1 = "Burn resources in a 2x2 Square.";
+        rulesLn2 = "  It must include at least one fire.";
         break;
       case Win:
         if (players[0] > players[1]) {
@@ -270,6 +282,9 @@ class Game {
    
    text(title, 0, -12);
    text(text, 0, 9*50);
+   text(rulesLn1, 460,450);
+   text(rulesLn2, 430,500);
+   
    
    //text("Points:", 0, 10*50);
    text("Player 1 has "+String.valueOf(players[0])+" points", 0, 11*50);
